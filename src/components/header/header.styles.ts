@@ -4,9 +4,8 @@ import ImageContainer from '../common/image-container/image-container.component'
 
 export const HeaderContainer = styled.div`
 	display: grid;
-	width: 210px;
+	width: 140px;
 
-	grid-template-columns: auto 150px;
 	place-items: flex-start center;
 
 	position: absolute;
@@ -21,12 +20,13 @@ export const HeaderContainer = styled.div`
 export const LogOutContainer = styled.div`
 	display: grid;
 	height: 50px;
-	width: 164px;
+	width: 100%;
 
 	grid-template-columns: 1fr auto;
 
 	border-radius: 0.5rem;
-	flex: 1;
+
+	gap: 4px;
 
 	place-items: center;
 	place-content: center;
@@ -44,30 +44,23 @@ export const Avatar = styled(ImageContainer)`
 	grid-column: 2 / 3;
 
 	z-index: 2;
-
-	transform: translate(-4px, 0);
 `;
 
-export const LogOutButton = styled(CustomButton)`
-	width: 120px;
+export const AuthButton = styled(CustomButton)`
+	width: 100px;
 	height: 44px;
 
 	background-color: ${({ theme }) => theme.secondary};
 
-	border-top-left-radius: 0.2rem;
-	border-bottom-left-radius: 0.2rem;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
+	border-radius: 0.4rem;
 
 	grid-column: 1 / 2;
-	transform: translate(0px, 0);
 
 	font-size: 10px;
 	margin: 0;
 	padding: 0;
 
-	place-items: center flex-start;
-	padding-left: 16px;
+	place-items: center;
 
 	z-index: 1;
 `;

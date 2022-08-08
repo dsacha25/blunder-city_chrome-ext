@@ -32,6 +32,9 @@ const userReducer = produce(
 				state.auth = action.payload;
 				state.error = '';
 				return state;
+			case UserTypes.LOG_OUT_SUCCESS:
+				state = INITIAL_STATE;
+				return state;
 			case UserTypes.USER_ERROR:
 				state.error = action.payload.message;
 				return state;

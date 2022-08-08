@@ -4,12 +4,14 @@ import { Credentials } from '../../utils/types/user/credentials/credentials';
 import {
 	LogInStartAction,
 	LogInSuccessAction,
+	LogOutStartAction,
+	LogOutSuccessAction,
 	UserErrorAction,
 } from './user.action-types';
 import UserTypes from './user.types';
 
 /**
- * SIGN IN
+ * LOG IN
  */
 export const logInUserStart = (credentials: Credentials): LogInStartAction => ({
 	type: UserTypes.LOG_IN_START,
@@ -19,6 +21,17 @@ export const logInUserStart = (credentials: Credentials): LogInStartAction => ({
 export const logInUserSuccess = (user: User): LogInSuccessAction => ({
 	type: UserTypes.LOG_IN_SUCCESS,
 	payload: user,
+});
+
+/**
+ * LOG OUT
+ */
+export const logOutUserStart = (): LogOutStartAction => ({
+	type: UserTypes.LOG_OUT_START,
+});
+
+export const logOutUserSuccess = (): LogOutSuccessAction => ({
+	type: UserTypes.LOG_OUT_SUCCESS,
 });
 
 /**

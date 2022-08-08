@@ -1,45 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { User } from 'firebase/auth';
 import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import useActions from '../../hooks/use-actions/use-actions.hook';
 import { RootState } from '../../redux/root-reducer';
-import { UserState } from '../../redux/user/user.reducer';
-import Paths from '../../utils/types/util/paths/paths';
 import {
 	Avatar,
 	HeaderContainer,
-	LogOutButton,
+	AuthButton,
 	LogOutContainer,
 } from './header.styles';
 
-export enum Sender {
-	React,
-	Content,
-}
+const Header = (props: { user: User | null }) => {
+	const { logOutUserStart } = useActions();
 
-const Header = (props: { user: UserState }) => {
-	const navigate = useNavigate();
-	const { logInUserStart } = useActions();
-
-	const handleLogIn = () => {
-		logInUserStart({
-			email: 'dsacha@aol.com',
-			password: 'asdqwe',
-		});
-
-		setTimeout(() => {
-			navigate(`/${Paths.DASHBOARD}`);
-		}, 1000);
-	};
+	if (!props.user) return null;
 
 	return createPortal(
 		<HeaderContainer>
 			<LogOutContainer>
-				<LogOutButton onClick={handleLogIn} color="secondary">
-					Log In
-				</LogOutButton>
-				<Avatar url={props.user.auth?.photoURL} />
+				<AuthButton onClick={logOutUserStart} color="secondary">
+					Log Out
+				</AuthButton>
+				<Avatar url={props.user.photoURL} />
 			</LogOutContainer>
 		</HeaderContainer>,
 		document.getElementById('portal') as HTMLElement
@@ -48,7 +31,7 @@ const Header = (props: { user: UserState }) => {
 
 const mapStateToProps = (state: RootState) => {
 	return {
-		user: state.user,
+		user: state.user.auth,
 	};
 };
 

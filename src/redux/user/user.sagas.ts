@@ -1,10 +1,25 @@
-import { all, call, put, takeEvery } from 'typed-redux-saga/macro';
+import { all, call, put, takeEvery, takeLatest } from 'typed-redux-saga/macro';
 import { auth } from '../../utils/classes/firestore/firestore-app';
 import { LogInStartAction } from './user.action-types';
-import { logInUserSuccess, userError } from './user.actions';
+import { logInUserSuccess, logOutUserSuccess, userError } from './user.actions';
 import UserTypes from './user.types';
 
-export function* signInUser({ payload: credentials }: LogInStartAction) {
+/**
+ * LOG OUT
+ */
+export function* logOutUser() {
+	yield auth.logOutUser();
+	yield* put(logOutUserSuccess());
+}
+
+export function* onLogOutUser() {
+	yield* takeLatest(UserTypes.LOG_OUT_START, logOutUser);
+}
+
+/**
+ * LOG IN
+ */
+export function* logInUser({ payload: credentials }: LogInStartAction) {
 	try {
 		console.log('SIGN IN USER: ', credentials);
 
@@ -20,10 +35,13 @@ export function* signInUser({ payload: credentials }: LogInStartAction) {
 	}
 }
 
-export function* onSignInUser() {
-	yield* takeEvery(UserTypes.LOG_IN_START, signInUser);
+export function* onLogInUser() {
+	yield* takeEvery(UserTypes.LOG_IN_START, logInUser);
 }
 
+/**
+ * RUN ALL USER SAGAS
+ */
 export function* userSagas() {
-	yield* all([call(onSignInUser)]);
+	yield* all([call(onLogInUser), call(onLogOutUser)]);
 }

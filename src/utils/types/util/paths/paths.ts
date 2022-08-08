@@ -1,5 +1,6 @@
 enum Paths {
-	DASHBOARD = 'DASHBOARD',
+	HOME = 'index.html',
+	DASHBOARD = 'dashboard',
 }
 
 export default Paths;

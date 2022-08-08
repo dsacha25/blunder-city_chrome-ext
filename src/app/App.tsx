@@ -24,6 +24,7 @@ function App(props: { user: User | null }) {
 			<Header />
 			<Routes>
 				<Route index element={<HomePage />} />
+				<Route path={Paths.HOME} element={<HomePage />} />
 
 				<Route path={Paths.DASHBOARD} element={<PrivateRoute />}>
 					<Route index element={<DashboardPage />} />

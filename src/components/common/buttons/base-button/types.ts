@@ -23,11 +23,6 @@ export interface StyleTypes {
 	transform?: string;
 }
 
-type Click =
-	| (() => void)
-	| ((e: FormEvent<HTMLButtonElement>) => void)
-	| Promise<void>;
-
 export interface BaseButtonProps extends ComponentPropsWithRef<'button'> {
 	disabled?: boolean;
 	children?: ReactNode;

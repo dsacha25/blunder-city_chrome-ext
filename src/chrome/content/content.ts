@@ -23,7 +23,7 @@ const messagesFromReactAppListener = (
 		message.from === Sender.React &&
 		message.message === 'LOG_IN_CALLBACK'
 	) {
-		response('dicks');
+		response(true);
 	}
 };
 
