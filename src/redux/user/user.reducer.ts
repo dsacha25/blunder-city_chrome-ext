@@ -28,9 +28,16 @@ export const INITIAL_STATE = {
 const userReducer = produce(
 	(state: UserState = INITIAL_STATE, action: UserActions) => {
 		switch (action.type) {
+			case UserTypes.FETCH_CHESS_USER_SUCCESS:
+				state.user = action.payload;
+				state.error = '';
+				return state;
 			case UserTypes.LOG_IN_SUCCESS:
 				state.auth = action.payload;
 				state.error = '';
+				return state;
+			case UserTypes.CLOSE_CHESS_USER_LISTENER:
+				state.user = null;
 				return state;
 			case UserTypes.LOG_OUT_SUCCESS:
 				state = INITIAL_STATE;

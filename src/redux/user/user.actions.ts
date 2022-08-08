@@ -1,14 +1,36 @@
 import { User } from 'firebase/auth';
+import { ChessUser } from '../../utils/types/user/chess-user/chess-user';
 // import { ChessUser } from '../../utils/types/user/chess-user/chess-user';
 import { Credentials } from '../../utils/types/user/credentials/credentials';
 import {
+	CloseChessUserListenerAction,
+	FetchChessUserSuccessAction,
 	LogInStartAction,
 	LogInSuccessAction,
 	LogOutStartAction,
 	LogOutSuccessAction,
+	OpenChessUserListenerAction,
 	UserErrorAction,
 } from './user.action-types';
 import UserTypes from './user.types';
+
+/**
+ * CHESS USER LISTENER
+ */
+export const openChessUserListener = (): OpenChessUserListenerAction => ({
+	type: UserTypes.OPEN_CHESS_USER_LISTENER,
+});
+
+export const closeChessUserListener = (): CloseChessUserListenerAction => ({
+	type: UserTypes.CLOSE_CHESS_USER_LISTENER,
+});
+
+export const fetchChessUserSuccess = (
+	chessUser: ChessUser
+): FetchChessUserSuccessAction => ({
+	type: UserTypes.FETCH_CHESS_USER_SUCCESS,
+	payload: chessUser,
+});
 
 /**
  * LOG IN
