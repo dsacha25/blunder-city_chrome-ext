@@ -1,23 +1,48 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import App from './app/App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
+import { Store } from 'webext-redux';
+import { Provider } from 'react-redux';
+import { store } from './redux/redux';
+import { ThemeProvider } from 'styled-components';
+import globalStyles from './global-styles/global-styles';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const root = createRoot(document.getElementById('root') as HTMLElement);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.unregister();
+if (process.env.NODE_ENV === 'development') {
+	root.render(
+		<React.StrictMode>
+			<Provider store={store}>
+				<BrowserRouter>
+					<ThemeProvider theme={globalStyles}>
+						<App />
+					</ThemeProvider>
+				</BrowserRouter>
+			</Provider>
+		</React.StrictMode>
+	);
+} else {
+	const proxyStore = new Store();
+
+	proxyStore.ready().then(() => {
+		render(
+			<React.StrictMode>
+				<Provider store={proxyStore}>
+					<BrowserRouter>
+						<ThemeProvider theme={globalStyles}>
+							<App />
+						</ThemeProvider>
+					</BrowserRouter>
+				</Provider>
+			</React.StrictMode>,
+			document.getElementById('root')
+		);
+	});
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
