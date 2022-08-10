@@ -15,6 +15,7 @@ import { ChessUser } from '../../utils/types/user/chess-user/chess-user';
 import { LogInStartAction } from './user.action-types';
 import {
 	closeChessUserListener,
+	fetchChessUserSuccess,
 	logInUserSuccess,
 	logOutUserSuccess,
 	openChessUserListener,
@@ -28,35 +29,29 @@ import UserTypes from './user.types';
  */
 
 export function* setChessUser(chessUser: ChessUser) {
-	// yield* put()
+	yield* put(fetchChessUserSuccess(chessUser));
 }
 
 export function* initializeChessUserListener() {
 	try {
 		const uid = yield* select(selectUserUID);
-
-		/**
-		 * GET DOCUMENT REFERENCE
-		 */
-		const docReference = yield* call<
-			any[],
-			getReturn<DocumentReference<ChessUser>>
-		>(db.getDocumentReference, `users/${uid}`);
+		if (!uid) return;
 
 		/**
 		 * CREATE LISTENER CHANNEL
 		 */
 		const chessUserChannel = yield* call<
-			DocumentReference<ChessUser>[],
+			string[],
 			getReturn<EventChannel<ChessUser>>
-		>(listener.generateDocumentListener, docReference);
+		>(listener.generateDocListener, `users/${uid}`);
 
 		/**
 		 * CLOSE LISTENER
 		 */
-		yield* takeEvery(UserTypes.CLOSE_CHESS_USER_LISTENER, function* () {
-			yield chessUserChannel.close();
-		});
+		yield* listener.onListenerClose(
+			chessUserChannel,
+			UserTypes.CLOSE_CHESS_USER_LISTENER
+		);
 
 		/**
 		 * INITIALIZE CHANNEL

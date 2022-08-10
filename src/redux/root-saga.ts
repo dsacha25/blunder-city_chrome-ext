@@ -1,8 +1,9 @@
 import { all, call } from 'typed-redux-saga/macro';
-import { userSagas } from './user/user.sagas';
+import { gameSagas } from './game/game.sagas';
+import { userSagas } from './users/user.sagas';
 
 function* rootSaga() {
-	yield* all([call(userSagas)]);
+	yield* all([call(userSagas), call(gameSagas)]);
 }
 
 export default rootSaga;

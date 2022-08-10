@@ -8,6 +8,11 @@ const selectUser = (state: RootState) => state.user;
  */
 export const selectChessUser = createSelector(selectUser, (user) => user.user);
 
+export const selectProfilePicture = createSelector(
+	selectChessUser,
+	(user) => user?.photoURL
+);
+
 /**
  * CREDENTIALS
  */
@@ -22,4 +27,9 @@ export const selectUserCredentials = createSelector(
 export const selectUserUID = createSelector(
 	selectUser,
 	(user) => user.auth?.uid
+);
+
+export const selectIsUserOnline = createSelector(
+	selectUser,
+	(user) => user.online
 );

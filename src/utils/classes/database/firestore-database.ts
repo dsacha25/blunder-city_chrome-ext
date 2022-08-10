@@ -64,7 +64,7 @@ export class FirestoreDatabase implements Database {
 				return data;
 			},
 			fromFirestore: (snap: QueryDocumentSnapshot<T>) => {
-				return snap.data() as T;
+				return { ...snap.data(), id: snap.id } as T;
 			},
 		});
 	};

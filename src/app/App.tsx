@@ -9,6 +9,7 @@ import PrivateRoute from '../components/common/private-route/private-route.compo
 import { RootState } from '../redux/root-reducer';
 import { User } from 'firebase/auth';
 import { connect } from 'react-redux';
+import PlayPage from '../pages/play-page/play-page.component';
 
 function App(props: { user: User | null }) {
 	const navigate = useNavigate();
@@ -28,6 +29,10 @@ function App(props: { user: User | null }) {
 
 				<Route path={Paths.DASHBOARD} element={<PrivateRoute />}>
 					<Route index element={<DashboardPage />} />
+				</Route>
+
+				<Route path={Paths.PLAY} element={<PrivateRoute />}>
+					<Route index element={<PlayPage />} />
 				</Route>
 			</Routes>
 			<SiteBackground />
