@@ -51,6 +51,9 @@ const gameReducer = produce(
 				if (!state.activeGame) return state;
 				state.activeGame = { ...state.activeGame, fen: action.payload };
 				return state;
+			case GameTypes.SET_ORIENTATION:
+				state.orientation = action.payload;
+				return state;
 			case GameTypes.MAKE_PENDING_MOVE:
 				state.pendingMove = action.payload;
 				state.error = '';

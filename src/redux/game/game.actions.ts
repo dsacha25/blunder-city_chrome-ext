@@ -1,6 +1,7 @@
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
 import { ChessMove } from '../../utils/types/chess/chess-move/chess-move';
 import { HistoryMove } from '../../utils/types/chess/history-move/history-move';
+import Orientation from '../../utils/types/chess/orientation/orientation';
 import { PromotionPieces } from '../../utils/types/chess/promotion-pieces/promotion-pieces';
 import {
 	CancelPendingMoveAction,
@@ -17,6 +18,7 @@ import {
 	SetActiveGameAction,
 	SetActiveGamesAction,
 	SetFenAction,
+	SetOrientationAction,
 	SetPromotionPieceTypeAction,
 } from './game.action-types';
 import GameTypes from './game.types';
@@ -96,6 +98,13 @@ export const setPromotionPieceType = (
 
 export const clearPromotionPieceType = (): ClearPromotionPieceTypeAction => ({
 	type: GameTypes.CLEAR_PROMOTION_PIECE_TYPE,
+});
+
+export const setPlayerOrientation = (
+	orientation: Orientation
+): SetOrientationAction => ({
+	type: GameTypes.SET_ORIENTATION,
+	payload: orientation,
 });
 
 /**

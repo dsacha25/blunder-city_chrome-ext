@@ -3,6 +3,7 @@ import { EventChannel } from 'redux-saga';
 import { all, call, put, takeEvery, select } from 'typed-redux-saga/macro';
 import { functions } from '../../utils/classes/firestore/firestore-app';
 import { listener } from '../../utils/classes/sagas/saga-listener';
+import { getPlayerOrientation } from '../../utils/helpers/game/get-player-orientation/get-player-orientation';
 import parseGameTime from '../../utils/helpers/parsers/parse-game-time/parse-game-time';
 import getReturn from '../../utils/helpers/sagas/get-return-type';
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
@@ -13,6 +14,7 @@ import {
 	makeConfirmedMoveSuccess,
 	setActiveGame,
 	setActiveGames,
+	setPlayerOrientation,
 } from './game.actions';
 import { selectActiveGame, selectPendingMove } from './game.selector';
 import GameTypes from './game.types';
@@ -58,6 +60,10 @@ export function* onMakeConfirmedMoveStart() {
  */
 export function* setActiveGameSaga(game: ChessGameType) {
 	yield* put(setActiveGame(game));
+	const uid = yield* select(selectUserUID);
+
+	if (!uid) return;
+	yield* put(setPlayerOrientation(getPlayerOrientation(game.white.uid, uid)));
 }
 
 export function* createActiveGameListener() {

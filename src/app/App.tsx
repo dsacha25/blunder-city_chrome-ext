@@ -10,17 +10,34 @@ import { RootState } from '../redux/root-reducer';
 import { User } from 'firebase/auth';
 import { connect } from 'react-redux';
 import PlayPage from '../pages/play-page/play-page.component';
+import { ChessGameType } from '../utils/types/chess/chess-game-type/chess-game-type';
+import parsePlayableGames from '../utils/helpers/parsers/parse-playable-games/parse-playable-games';
 
-function App(props: { user: User | null }) {
+function App(props: { user: User | null; playableGames: ChessGameType[] }) {
+	const { user, playableGames } = props;
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		chrome.browserAction.setBadgeText({ text: '1' });
-		chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
-	}, []);
+		console.log(
+			'PLAYABLE GAMES: ',
+			parsePlayableGames(playableGames, user?.uid)
+		);
+
+		if (process.env.NODE_ENV === 'development') return;
+
+		if (playableGames.length > 0) {
+			chrome.browserAction.setBadgeText({
+				text: playableGames.length.toString(),
+			});
+			chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
+		} else {
+			chrome.browserAction.setBadgeText({});
+			chrome.browserAction.setBadgeBackgroundColor({ color: 'transparent' });
+		}
+	}, [playableGames]);
 
 	useEffect(() => {
-		if (!props.user) {
+		if (!user) {
 			navigate(`/`);
 		}
 	}, []);
@@ -45,9 +62,10 @@ function App(props: { user: User | null }) {
 	);
 }
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = ({ user, game }: RootState) => {
 	return {
-		user: state.user.auth,
+		user: user.auth,
+		playableGames: game.games,
 	};
 };
 

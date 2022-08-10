@@ -1,6 +1,7 @@
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
 import { ChessMove } from '../../utils/types/chess/chess-move/chess-move';
 import { HistoryMove } from '../../utils/types/chess/history-move/history-move';
+import Orientation from '../../utils/types/chess/orientation/orientation';
 import { PromotionPieces } from '../../utils/types/chess/promotion-pieces/promotion-pieces';
 import GameTypes from './game.types';
 
@@ -34,6 +35,11 @@ export interface SetActiveGameAction {
 
 export interface CloseActiveGameListenerAction {
 	type: GameTypes.CLOSE_ACTIVE_GAME_LISTENER;
+}
+
+export interface SetOrientationAction {
+	type: GameTypes.SET_ORIENTATION;
+	payload: Orientation;
 }
 
 /**
@@ -90,6 +96,7 @@ type GameActions =
 	| OpenActiveGameListenerAction
 	| SetActiveGameAction
 	| CloseActiveGameListenerAction
+	| SetOrientationAction
 	| MovePieceAction
 	| SetFenAction
 	| MakePendingMoveAction
