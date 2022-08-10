@@ -34,7 +34,7 @@ export const OnlineStatusIndicator = styled.div<OnlineStatusProps>`
 
 	position: absolute;
 
-	${({ left }) => (left ? 'top: 8px; left: -6px' : 'top: -4px; right: -6px')};
+	${({ left }) => (left ? 'top: -4px; left: -6px' : 'top: -4px; right: -6px')};
 
 	z-index: 1;
 
