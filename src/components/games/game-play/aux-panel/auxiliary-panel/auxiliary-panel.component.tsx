@@ -18,12 +18,19 @@ import GameHistory from '../history/game-history/game-history.component';
 import { AuxActions } from './types';
 import ConfirmActionPrompt from '../confirm-action-prompt/confirm-action-prompt.component';
 import useSelector from '../../../../../hooks/use-selector/use-selector.hook';
+import { RootState } from '../../../../../redux/root-reducer';
+import { chunk } from 'lodash';
+import { connect } from 'react-redux';
+import { HistoryMove } from '../../../../../utils/types/chess/history-move/history-move';
+import { ChessMove } from '../../../../../utils/types/chess/chess-move/chess-move';
 
-const AuxiliaryPanel = () => {
-	const history = useSelector((state) => selectTurns(state));
-	const pendingMove = useSelector((state) => selectPendingMove(state));
-	const loading = useSelector((state) => selectGameLoadingState(state));
-	const isGameOver = useSelector((state) => selectIsGameOver(state));
+const AuxiliaryPanel = (props: {
+	history: HistoryMove[][];
+	pendingMove: ChessMove | null;
+	loading: boolean;
+	isGameOver?: boolean;
+}) => {
+	const { history, pendingMove, loading, isGameOver } = props;
 
 	const [action, setAction] = useState<AuxActions>(AuxActions.MOVE);
 	const [open, setOpen] = useState(false);
@@ -124,4 +131,11 @@ const AuxiliaryPanel = () => {
 	);
 };
 
-export default memo(AuxiliaryPanel);
+const mapStateToProps = ({ game }: RootState) => ({
+	history: chunk(game.activeGame?.moves, 2),
+	pendingMove: game.pendingMove,
+	loading: game.loading,
+	isGameOver: game.activeGame?.gameOver.isGameOver,
+});
+
+export default memo(connect(mapStateToProps)(AuxiliaryPanel));
