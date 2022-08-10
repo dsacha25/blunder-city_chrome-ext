@@ -105,6 +105,8 @@ export function* setActiveGamesSaga(chessGames: ChessGameType[]) {
 
 	const playableGames = parsePlayableGames(chessGames, uid);
 
+	if (process.env.NODE_ENV === 'development') return;
+
 	if (playableGames.length > 0) {
 		chrome.browserAction.setBadgeText({
 			text: playableGames.length.toString(),
@@ -137,19 +139,19 @@ export function* createActiveGamesListener() {
 
 		yield listener.initializeChannel(gamesChannel, setActiveGamesSaga);
 	} catch (err) {
-		yield put(gameError(err as Error));
+		yield* put(gameError(err as Error));
 	}
 }
 
 export function* onOpenActiveGamesListener() {
-	yield takeEvery(
+	yield* takeEvery(
 		GameTypes.OPEN_ACTIVE_GAMES_LISTENER,
 		createActiveGamesListener
 	);
 }
 
 export function* gameSagas() {
-	yield all([
+	yield* all([
 		call(onOpenActiveGamesListener),
 		call(onOpenActiveGameListener),
 		call(onMakeConfirmedMoveStart),

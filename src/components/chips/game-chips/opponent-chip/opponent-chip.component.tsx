@@ -31,9 +31,10 @@ const OnlineStatus = memo(OnlineStatusIndicator);
 
 const OpponentChip = (props: {
 	game: ChessGameType | null;
+	opponent: ChessUser | null;
 	turn?: Orientation;
 }) => {
-	const { game, turn } = props;
+	const { game, turn, opponent } = props;
 	// const { setActiveGameTime } = useActions();
 	// const enemy = useSelector((state) => selectEnemyInfo(state));
 	const enemy: ChessUser = useMemo(
@@ -58,8 +59,8 @@ const OpponentChip = (props: {
 	const [time, setTime] = useState(Date.now());
 
 	useEffect(() => {
-		if (game && enemy) {
-			const { previousMoveTime } = parseCurrentPlayer(enemy.uid, game, true);
+		if (game && opponent) {
+			const { previousMoveTime } = parseCurrentPlayer(opponent.uid, game, true);
 
 			if (!isPresenceRequired(game.gameMode)) return;
 
@@ -77,18 +78,25 @@ const OpponentChip = (props: {
 				);
 			}
 		}
-	}, [game, enemy]);
+	}, [game, opponent]);
 
 	useEffect(() => {
-		if (game && enemy && side === turn && !isPresenceRequired(game.gameMode)) {
+		if (
+			game &&
+			opponent &&
+			side === turn &&
+			!isPresenceRequired(game.gameMode)
+		) {
 			console.log(
 				'SET TIME FROM OPPONENT: ',
-				Date.now() + milliseconds(parseGameTime(enemy.uid, game) || {})
+				Date.now() + milliseconds(parseGameTime(opponent.uid, game) || {})
 			);
 
-			setTime(Date.now() + milliseconds(parseGameTime(enemy.uid, game) || {}));
+			setTime(
+				Date.now() + milliseconds(parseGameTime(opponent.uid, game) || {})
+			);
 		}
-	}, [game, enemy, turn, side]);
+	}, [game, opponent, turn, side]);
 
 	useEffect(() => {
 		if (!game) return;
@@ -114,11 +122,11 @@ const OpponentChip = (props: {
 	}, [game]);
 
 	useEffect(() => {
-		if (game && enemy) {
+		if (game && opponent) {
 			console.log('BLACK UID: ', game.black.uid);
-			console.log('ENEMY UID: ', enemy.uid);
-			console.log('BLACK UID === ENEMY UID: ', game.black.uid === enemy.uid);
-			setSide(game.black.uid === enemy.uid ? 'black' : 'white');
+			console.log('ENEMY UID: ', opponent.uid);
+			console.log('BLACK UID === ENEMY UID: ', game.black.uid === opponent.uid);
+			setSide(game.black.uid === opponent.uid ? 'black' : 'white');
 			console.log('OPP SIDE: ', side);
 		}
 
@@ -131,24 +139,24 @@ const OpponentChip = (props: {
 		if (time.completed) {
 			// AUTO RESIGN GAME
 		}
-		if (enemy && game) {
+		if (opponent && game) {
 			console.log('TURN ', game.turn);
 			console.log('OPP SIDE', side);
-			// return enemy.uid === game.black.uid
+			// return opponent.uid === game.black.uid
 			// 	? setActiveGameTime(time, 'black')
 			// 	: setActiveGameTime(time, 'white');
 		}
 	};
 
-	if (!enemy || !game) return null;
+	if (!opponent || !game) return null;
 	return (
 		<ChipContainer opponent>
-			<ChipAvatar opponent url={enemy.photoURL}>
-				<OnlineStatus online={enemy.online} left />
+			<ChipAvatar opponent url={opponent.photoURL}>
+				<OnlineStatus online={opponent.online} left />
 			</ChipAvatar>
 			<PlayerInfo opponent>
-				<Name>{enemy.displayName}</Name>
-				<Rating>{enemy.rating}</Rating>
+				<Name>{opponent.displayName}</Name>
+				<Rating>{opponent.rating}</Rating>
 				<CountdownTimer
 					date={time}
 					getTime={handleTime}
@@ -160,9 +168,10 @@ const OpponentChip = (props: {
 	);
 };
 
-const mapStateToProps = ({ game }: RootState) => ({
+const mapStateToProps = ({ game, enemy }: RootState) => ({
 	game: game.activeGame,
 	turn: game.activeGame?.turn,
+	opponent: enemy.opponentInfo,
 });
 
 export default memo(connect(mapStateToProps)(OpponentChip));
