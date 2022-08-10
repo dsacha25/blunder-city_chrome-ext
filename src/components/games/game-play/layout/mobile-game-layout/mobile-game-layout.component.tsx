@@ -11,15 +11,20 @@ import OnlineChessboard from '../../boards/online-chessboard/online-chessboard.c
 import { MobileGameLayoutContainer } from './mobile-game-layout.styles';
 import useActions from '../../../../../hooks/use-actions/use-actions.hook';
 import ConfirmActionPrompt from '../../aux-panel/confirm-action-prompt/confirm-action-prompt.component';
-import useSelector from '../../../../../hooks/use-selector/use-selector.hook';
+import { RootState } from '../../../../../redux/root-reducer';
+import { ChessGameType } from '../../../../../utils/types/chess/chess-game-type/chess-game-type';
+import { connect } from 'react-redux';
+import { ChessMove } from '../../../../../utils/types/chess/chess-move/chess-move';
 
-const MobileGameLayout = () => {
+const MobileGameLayout = (props: {
+	activeGame: ChessGameType | null;
+	pendingMove: ChessMove | null;
+	loading: boolean;
+}) => {
+	const { activeGame, pendingMove, loading } = props;
 	const { makeConfirmedMoveStart, cancelPendingMove } = useActions();
-	const activeGame = useSelector((state) => selectActiveGame(state));
 	// const index = useSelector((state) => selectMobileGameIndex(state));
 	const index = 0;
-	const pendingMove = useSelector((state) => selectPendingMove(state));
-	const loading = useSelector((state) => selectGameLoadingState(state));
 	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
@@ -50,4 +55,10 @@ const MobileGameLayout = () => {
 	);
 };
 
-export default MobileGameLayout;
+const mapStateToProps = (state: RootState) => ({
+	activeGame: state.game.activeGame,
+	pendingMove: state.game.pendingMove,
+	loading: state.game.loading,
+});
+
+export default connect(mapStateToProps)(MobileGameLayout);

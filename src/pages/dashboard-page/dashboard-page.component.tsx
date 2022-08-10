@@ -21,7 +21,6 @@ const DashboardPage = () => {
 
 	return (
 		<PageContainer>
-			<Title fontSize="30px">Dashboard Page</Title>
 			<ActiveGamesList />
 		</PageContainer>
 	);

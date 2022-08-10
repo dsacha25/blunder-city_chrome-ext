@@ -15,23 +15,36 @@ import { SquareStyles } from '../../../../../utils/types/chess/square-styles/squ
 import { GameOverDisplay } from '../../game-over-display/game-over-display.component';
 import PromotionSelector from '../../promotion-selector/promotion-selector.component';
 import { ChessboardBaseProps } from './types';
-import useSelector from '../../../../../hooks/use-selector/use-selector.hook';
+import { RootState } from '../../../../../redux/root-reducer';
+import { connect } from 'react-redux';
+import Orientation from '../../../../../utils/types/chess/orientation/orientation';
+import { PromotionPieces } from '../../../../../utils/types/chess/promotion-pieces/promotion-pieces';
 
-const ChessboardBase: FC<ChessboardBaseProps> = ({
-	makeMove,
-	fen = '',
-	playersTurn,
-	orientation,
+const ChessboardBase = (props: {
+	makeMove: (from: Square, to: Square) => void;
+	fen: string | undefined;
+	playersTurn: boolean;
+	orientation: Orientation;
+	promotionType: PromotionPieces | null;
+	isGameOver?: boolean;
+	winner?: Orientation | null;
 }) => {
+	const {
+		makeMove,
+		fen,
+		playersTurn,
+		orientation,
+		promotionType,
+		isGameOver,
+		winner,
+	} = props;
+
 	// ==== HOOK
 	const { clearPromotionPieceType, setFen, movePiece, makePendingMove } =
 		useActions();
 
 	// ==== REDUX STATE
-	const promotionType = useSelector((state) => selectPromotionPieceType(state));
 	const gameType = 'online';
-	const isGameOver = useSelector((state) => selectIsGameOver(state));
-	const winner = useSelector((state) => selectGameWinner(state));
 
 	// ==== LOCAL STATE
 	const [storedMove, setStoredMove] = useState<{
@@ -46,7 +59,7 @@ const ChessboardBase: FC<ChessboardBaseProps> = ({
 
 	// ==== PIECE PROMOTION
 	useEffect(() => {
-		if (!promoting || !promotionType || !storedMove) return;
+		if (!promoting || !promotionType || !storedMove || !fen) return;
 
 		setStoredMove(null);
 		clearPromotionPieceType();
@@ -80,13 +93,13 @@ const ChessboardBase: FC<ChessboardBaseProps> = ({
 
 	// ==== STYLING
 	useEffect(() => {
-		if (startSquare && playersTurn) {
+		if (fen && startSquare && playersTurn) {
 			const moves = game.getMovesToHighlight(fen, startSquare);
 			if (moves && moves.length > 0) {
 				const highlightStyles = game.highlightSquare(fen, startSquare, moves);
 				setSquareStyles({ ...squareStyles, ...highlightStyles });
 			}
-		} else {
+		} else if (fen) {
 			setSquareStyles(game.squareStyling(fen, startSquare));
 		}
 
@@ -99,7 +112,7 @@ const ChessboardBase: FC<ChessboardBaseProps> = ({
 			setGameOver(true);
 		}
 
-		if (game.isGameOver(fen)) {
+		if (fen && game.isGameOver(fen)) {
 			if (gameType === 'online' && isGameOver) {
 				return setGameOver(game.isGameOver(fen));
 			} else if (gameType !== 'online') {
@@ -208,4 +221,10 @@ const ChessboardBase: FC<ChessboardBaseProps> = ({
 	);
 };
 
-export default ChessboardBase;
+const mapStateToProps = ({ game }: RootState) => ({
+	promotionType: game.promotionPieceType,
+	isGameOver: game.activeGame?.gameOver.isGameOver,
+	winner: game.activeGame?.gameOver.winner,
+});
+
+export default connect(mapStateToProps)(ChessboardBase);

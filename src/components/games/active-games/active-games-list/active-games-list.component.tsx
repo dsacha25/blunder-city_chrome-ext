@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import useSelector from '../../../../hooks/use-selector/use-selector.hook';
-import { selectActiveGames } from '../../../../redux/game/game.selector';
 import { RootState } from '../../../../redux/root-reducer';
 import { ChessGameType } from '../../../../utils/types/chess/chess-game-type/chess-game-type';
 import { List } from '../../../common/lists/list/list.styles';

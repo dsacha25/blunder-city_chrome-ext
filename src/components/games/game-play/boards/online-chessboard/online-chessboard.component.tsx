@@ -17,10 +17,15 @@ import {
 	PlayerContainer,
 } from '../board-styles/board-styles.styles';
 import useSelector from '../../../../../hooks/use-selector/use-selector.hook';
+import { RootState } from '../../../../../redux/root-reducer';
+import Orientation from '../../../../../utils/types/chess/orientation/orientation';
+import { connect } from 'react-redux';
 
-const OnlineChessboard = () => {
-	const fen = useSelector((state) => selectFen(state));
-	const orientation = useSelector((state) => selectOrientation(state));
+const OnlineChessboard = (props: {
+	fen: string | undefined;
+	orientation: Orientation;
+}) => {
+	const { fen, orientation } = props;
 
 	const { setFen, makePendingMove } = useActions();
 
@@ -71,4 +76,9 @@ const OnlineChessboard = () => {
 	);
 };
 
-export default memo(OnlineChessboard);
+const mapStateToProps = (state: RootState) => ({
+	fen: state.game.activeGame?.fen,
+	orientation: state.game.orientation,
+});
+
+export default memo(connect(mapStateToProps)(OnlineChessboard));

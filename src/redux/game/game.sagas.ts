@@ -1,13 +1,96 @@
 import { where } from 'firebase/firestore';
 import { EventChannel } from 'redux-saga';
 import { all, call, put, takeEvery, select } from 'typed-redux-saga/macro';
+import { functions } from '../../utils/classes/firestore/firestore-app';
 import { listener } from '../../utils/classes/sagas/saga-listener';
+import parseGameTime from '../../utils/helpers/parsers/parse-game-time/parse-game-time';
 import getReturn from '../../utils/helpers/sagas/get-return-type';
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
+import { ConfirmedMove } from '../../utils/types/chess/confirmed-move/confirmed-move';
 import { selectUserUID } from '../users/user.selector';
-import { gameError, setActiveGames } from './game.actions';
+import {
+	gameError,
+	makeConfirmedMoveSuccess,
+	setActiveGame,
+	setActiveGames,
+} from './game.actions';
+import { selectActiveGame, selectPendingMove } from './game.selector';
 import GameTypes from './game.types';
 
+/**
+ * MAKE MOVE
+ */
+export function* makeConfirmedMoveSaga() {
+	try {
+		const game = yield* select(selectActiveGame);
+		const pendingMove = yield* select(selectPendingMove);
+		const uid = yield* select(selectUserUID);
+
+		if (!game || !pendingMove || !uid) return;
+
+		const { fen, move, gameOver } = pendingMove;
+
+		const confirmedMove: ConfirmedMove = {
+			fen,
+			id: game.id,
+			move,
+			gameOver,
+			gameTime: parseGameTime(uid, game),
+		};
+
+		yield* call(
+			functions.callFirebaseFunction,
+			'makeConfirmedMove',
+			confirmedMove
+		);
+		yield* put(makeConfirmedMoveSuccess());
+	} catch (err) {
+		yield* put(gameError(err as Error));
+	}
+}
+
+export function* onMakeConfirmedMoveStart() {
+	yield* takeEvery(GameTypes.MAKE_CONFIRMED_MOVE_START, makeConfirmedMoveSaga);
+}
+
+/**
+ * CURRENT GAME
+ */
+export function* setActiveGameSaga(game: ChessGameType) {
+	yield* put(setActiveGame(game));
+}
+
+export function* createActiveGameListener() {
+	try {
+		const game = yield* select(selectActiveGame);
+		if (!game) return;
+
+		const gameChannel = yield* call<
+			any[],
+			getReturn<EventChannel<ChessGameType>>
+		>(listener.generateDocListener, `games/${game.id}`, true);
+
+		yield* listener.onListenerClose(
+			gameChannel,
+			GameTypes.CLOSE_ACTIVE_GAME_LISTENER
+		);
+
+		yield listener.initializeChannel(gameChannel, setActiveGameSaga);
+	} catch (err) {
+		yield* put(gameError(err as Error));
+	}
+}
+
+export function* onOpenActiveGameListener() {
+	yield* takeEvery(
+		GameTypes.OPEN_ACTIVE_GAME_LISTENER,
+		createActiveGameListener
+	);
+}
+
+/**
+ * ACTIVE GAMES LISTENER
+ */
 export function* setActiveGamesSaga(chessGames: ChessGameType[]) {
 	yield console.log('CHESS GAMES: ', chessGames);
 	yield* put(setActiveGames(chessGames));
@@ -47,5 +130,9 @@ export function* onOpenActiveGamesListener() {
 }
 
 export function* gameSagas() {
-	yield all([call(onOpenActiveGamesListener)]);
+	yield all([
+		call(onOpenActiveGamesListener),
+		call(onOpenActiveGameListener),
+		call(onMakeConfirmedMoveStart),
+	]);
 }
