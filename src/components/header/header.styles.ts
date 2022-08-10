@@ -13,7 +13,7 @@ export const HeaderContainer = styled.div`
 	top: 20px;
 
 	grid-gap: 10px;
-	margin-right: 30px;
+	margin-right: 10px;
 	z-index: 10;
 `;
 

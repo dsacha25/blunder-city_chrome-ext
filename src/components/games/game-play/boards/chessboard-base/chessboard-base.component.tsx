@@ -203,7 +203,7 @@ const ChessboardBase = (props: {
 				draggable
 				position={fen}
 				orientation={orientation}
-				width={500}
+				width={400}
 				squareStyles={squareStyles}
 				lightSquareStyle={{ backgroundColor: globalStyles.white }}
 				darkSquareStyle={{ backgroundColor: globalStyles.accent }}

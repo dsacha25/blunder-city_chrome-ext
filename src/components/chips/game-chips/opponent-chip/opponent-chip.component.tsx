@@ -1,11 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { milliseconds, toDate } from 'date-fns';
 import useActions from '../../../../hooks/use-actions/use-actions.hook';
-// import { selectEnemyInfo } from '../../../../redux/enemies/enemies.selector';
-import {
-	selectActiveGame,
-	selectGameTurn,
-} from '../../../../redux/game/game.selector';
+
 import parseGameTime from '../../../../utils/helpers/parsers/parse-game-time/parse-game-time';
 import { OnlineStatusIndicator } from '../../../common/online-status-indicator/online-status-indicator.styles';
 
@@ -23,7 +19,6 @@ import parseCurrentPlayer from '../../../../utils/helpers/parsers/parse-current-
 import parseTimeUnit from '../../../../utils/helpers/parsers/parse-time-unit/parse-time-unit';
 import isPresenceRequired from '../../../../utils/helpers/game/is-presence-required/is-presence-required';
 import { Timestamp } from 'firebase/firestore';
-import useSelector from '../../../../hooks/use-selector/use-selector.hook';
 import { ChessUser } from '../../../../utils/types/user/chess-user/chess-user';
 import { RootState } from '../../../../redux/root-reducer';
 import { connect } from 'react-redux';

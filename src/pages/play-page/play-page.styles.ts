@@ -2,9 +2,12 @@ import styled from 'styled-components';
 
 export const PlayContainer = styled.div`
 	display: grid;
-	width: 600px;
+	width: 100vw;
+	max-width: 600px;
 	height: 100vh;
-	padding: 40px 80px;
+	max-height: 600px;
+
 	position: relative;
-	grid-gap: 50px;
+	place-items: flex-start;
+	background-color: #33333322;
 `;

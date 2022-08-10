@@ -8,15 +8,12 @@ export const ConfirmActionContainer = styled.div`
 	grid-template-columns: 1fr 1fr;
 	place-items: center;
 
-	@media screen and (max-width: 980px) {
-		padding: 10px 20px;
-		margin-bottom: 20px;
-	}
+	padding: 10px 20px;
 `;
 
 export const ConfirmActionButton = styled(CustomButton)`
 	width: 100%;
-	height: 60px;
+	height: 50px;
 
 	border-top-left-radius: 0.5rem;
 	border-bottom-left-radius: 0.5rem;
@@ -30,7 +27,7 @@ export const ConfirmActionButton = styled(CustomButton)`
 
 export const RejectActionButton = styled(CustomButton)`
 	width: 100%;
-	height: 60px;
+	height: 50px;
 
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;

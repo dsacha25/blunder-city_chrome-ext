@@ -57,7 +57,7 @@ const OnlineChessboard = (props: {
 	};
 
 	return (
-		<BoardContainer size={500}>
+		<BoardContainer>
 			<OpponentContainer>
 				<OpponentChip />
 			</OpponentContainer>

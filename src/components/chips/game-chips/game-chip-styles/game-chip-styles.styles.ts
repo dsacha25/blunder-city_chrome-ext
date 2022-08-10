@@ -4,7 +4,7 @@ import { GameChipProps } from './types';
 
 export const ChipContainer = styled.div<GameChipProps>`
 	display: grid;
-	width: 340px;
+	width: 300px;
 	height: 100%;
 
 	position: relative;
@@ -14,8 +14,8 @@ export const ChipContainer = styled.div<GameChipProps>`
 `;
 
 export const ChipAvatar = styled(ImageContainer)<GameChipProps>`
-	width: 54px;
-	height: 54px;
+	width: 46px;
+	height: 46px;
 	border-radius: 0.5rem;
 	justify-self: ${({ opponent }) => (opponent ? 'flex-start' : 'flex-end')};
 	z-index: 1;
@@ -38,7 +38,7 @@ export const AiAvatar = styled.div<GameChipProps>`
 export const PlayerInfo = styled.div<GameChipProps>`
 	display: grid;
 	width: inherit;
-	height: 40px;
+	height: 30px;
 	justify-self: flex-end;
 	place-items: center
 		${({ opponent }) => (opponent ? 'flex-end' : 'flex-start')};
@@ -64,14 +64,14 @@ export const PlayerInfo = styled.div<GameChipProps>`
 
 export const PlayerName = styled.p`
 	font-weight: 200;
-	font-size: 14px;
+	font-size: 12px;
 	margin: 0;
 	color: ${({ theme }) => theme.white};
 `;
 
 export const PlayerRating = styled.p`
 	font-weight: 600;
-	font-size: 16px;
+	font-size: 14px;
 	margin: 0;
 	color: ${({ theme }) => theme.white};
 `;
