@@ -15,6 +15,11 @@ function App(props: { user: User | null }) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		chrome.browserAction.setBadgeText({ text: '1' });
+		chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
+	}, []);
+
+	useEffect(() => {
 		if (!props.user) {
 			navigate(`/`);
 		}

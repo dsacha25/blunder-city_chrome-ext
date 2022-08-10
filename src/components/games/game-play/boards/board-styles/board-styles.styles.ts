@@ -22,7 +22,7 @@ export const OpponentContainer = styled.div`
 export const PlayerContainer = styled.div`
 	display: grid;
 	width: 100%;
-	height: 45px;
+	height: px;
 	place-items: flex-start flex-end;
 	place-self: flex-start;
 `;

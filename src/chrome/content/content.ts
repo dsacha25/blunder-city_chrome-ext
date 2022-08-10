@@ -31,5 +31,6 @@ const messagesFromReactAppListener = (
  * Fired when a message is sent from either an extension process or a content script.
  */
 
-if (process.env.NODE_ENV === 'production')
+if (process.env.NODE_ENV === 'production') {
 	chrome.runtime.onMessage.addListener(messagesFromReactAppListener);
+}

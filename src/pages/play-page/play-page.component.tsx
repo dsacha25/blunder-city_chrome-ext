@@ -11,6 +11,8 @@ import WaitingForOpponentMsg from '../../components/games/game-play/waiting-for-
 import { RootState } from '../../redux/root-reducer';
 import { connect } from 'react-redux';
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
+import CustomButton from '../../components/common/buttons/custom-button/custom-button.component';
+import GameToolbar from '../../components/games/game-play/game-toolbar/game-toolbar.component';
 
 const PlayPage = (props: {
 	activeGame: ChessGameType | null;
@@ -107,6 +109,7 @@ const PlayPage = (props: {
 			{!activeGame?.gameOver && (
 				<WaitingForOpponentMsg playersPresent={playersPresent} />
 			)}
+			<GameToolbar />
 		</PlayContainer>
 	);
 };

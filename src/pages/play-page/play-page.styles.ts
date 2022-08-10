@@ -7,7 +7,8 @@ export const PlayContainer = styled.div`
 	height: 100vh;
 	max-height: 600px;
 
+	grid-template-columns: 1fr 160px;
+
 	position: relative;
-	place-items: flex-start;
-	background-color: #33333322;
+	place-items: center;
 `;
