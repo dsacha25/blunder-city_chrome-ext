@@ -1,15 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { milliseconds, toDate } from 'date-fns';
 import useActions from '../../../../hooks/use-actions/use-actions.hook';
-import {
-	selectActiveGame,
-	selectGameTurn,
-} from '../../../../redux/game/game.selector';
-import {
-	selectChessUser,
-	selectIsUserOnline,
-	selectUserUID,
-} from '../../../../redux/users/user.selector';
+
 import parseGameTime from '../../../../utils/helpers/parsers/parse-game-time/parse-game-time';
 import CountdownTimer from '../../../common/countdown-timer/countdown-timer.component';
 import { OnlineStatusIndicator } from '../../../common/online-status-indicator/online-status-indicator.styles';
@@ -27,20 +19,26 @@ import parseCurrentPlayer from '../../../../utils/helpers/parsers/parse-current-
 import parseTimeUnit from '../../../../utils/helpers/parsers/parse-time-unit/parse-time-unit';
 import isPresenceRequired from '../../../../utils/helpers/game/is-presence-required/is-presence-required';
 import { Timestamp } from 'firebase/firestore';
-import useSelector from '../../../../hooks/use-selector/use-selector.hook';
+import { RootState } from '../../../../redux/root-reducer';
+import { connect } from 'react-redux';
+import { ChessUser } from '../../../../utils/types/user/chess-user/chess-user';
+import { ChessGameType } from '../../../../utils/types/chess/chess-game-type/chess-game-type';
+import Orientation from '../../../../utils/types/chess/orientation/orientation';
 
 const Rating = memo(PlayerRating);
 const Name = memo(PlayerName);
 const OnlineStatus = memo(OnlineStatusIndicator, isEqual);
 const Avatar = memo(ChipAvatar, isEqual);
 
-const PlayerChip = () => {
+const PlayerChip = (props: {
+	chessUser: ChessUser | null;
+	game: ChessGameType | null;
+	online: boolean;
+	turn?: Orientation;
+	uid?: string;
+}) => {
+	const { chessUser, game, online, turn, uid } = props;
 	// const { setActiveGameTime } = useActions();
-	const chessUser = useSelector((state) => selectChessUser(state));
-	const uid = useSelector((state) => selectUserUID(state)) as string;
-	const game = useSelector((state) => selectActiveGame(state));
-	const online = useSelector((state) => selectIsUserOnline(state));
-	const turn = useSelector((state) => selectGameTurn(state));
 
 	const [side, setSide] = useState('white');
 	const [paused, setPaused] = useState(false);
@@ -59,7 +57,7 @@ const PlayerChip = () => {
 	}, []);
 
 	useEffect(() => {
-		if (game) {
+		if (game && uid) {
 			const { previousMoveTime } = parseCurrentPlayer(uid, game, true);
 
 			console.log('PRESENCE?: ', isPresenceRequired(game.gameMode));
@@ -80,7 +78,7 @@ const PlayerChip = () => {
 	}, [game, turn, side]);
 
 	useEffect(() => {
-		if (game && side === turn && !isPresenceRequired(game.gameMode)) {
+		if (game && uid && side === turn && !isPresenceRequired(game.gameMode)) {
 			console.log(
 				'SET TIME FROM USER: ',
 				Date.now() + milliseconds(parseGameTime(uid, game) || {})
@@ -150,4 +148,12 @@ const PlayerChip = () => {
 	);
 };
 
-export default memo(PlayerChip);
+const mapStateToProps = ({ game, user }: RootState) => ({
+	chessUser: user.user,
+	game: game.activeGame,
+	online: user.online,
+	turn: game.activeGame?.turn,
+	uid: user.auth?.uid,
+});
+
+export default memo(connect(mapStateToProps)(PlayerChip));

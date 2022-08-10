@@ -25,12 +25,20 @@ import isPresenceRequired from '../../../../utils/helpers/game/is-presence-requi
 import { Timestamp } from 'firebase/firestore';
 import useSelector from '../../../../hooks/use-selector/use-selector.hook';
 import { ChessUser } from '../../../../utils/types/user/chess-user/chess-user';
+import { RootState } from '../../../../redux/root-reducer';
+import { connect } from 'react-redux';
+import { ChessGameType } from '../../../../utils/types/chess/chess-game-type/chess-game-type';
+import Orientation from '../../../../utils/types/chess/orientation/orientation';
 
 const Name = memo(PlayerName);
 const Rating = memo(PlayerRating);
 const OnlineStatus = memo(OnlineStatusIndicator);
 
-const OpponentChip = () => {
+const OpponentChip = (props: {
+	game: ChessGameType | null;
+	turn?: Orientation;
+}) => {
+	const { game, turn } = props;
 	// const { setActiveGameTime } = useActions();
 	// const enemy = useSelector((state) => selectEnemyInfo(state));
 	const enemy: ChessUser = useMemo(
@@ -49,8 +57,6 @@ const OpponentChip = () => {
 		}),
 		[]
 	);
-	const game = useSelector((state) => selectActiveGame(state));
-	const turn = useSelector((state) => selectGameTurn(state));
 
 	const [side, setSide] = useState('white');
 	const [paused, setPaused] = useState(false);
@@ -159,4 +165,9 @@ const OpponentChip = () => {
 	);
 };
 
-export default memo(OpponentChip);
+const mapStateToProps = ({ game }: RootState) => ({
+	game: game.activeGame,
+	turn: game.activeGame?.turn,
+});
+
+export default memo(connect(mapStateToProps)(OpponentChip));
