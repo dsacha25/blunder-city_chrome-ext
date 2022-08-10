@@ -5,8 +5,8 @@ import Spinner from '../../../common/spinner/spinner.component';
 export const WaitingPromptBackdrop = styled.div`
 	display: grid;
 	place-items: center;
-	width: 100vw;
-	height: 100vh;
+	width: 600px;
+	height: 600px;
 	position: absolute;
 
 	margin: auto;
@@ -17,42 +17,21 @@ export const WaitingPromptBackdrop = styled.div`
 	bottom: 0;
 
 	z-index: 10;
-	backdrop-filter: blur(6px);
-
-	@media screen and (max-width: 980px) {
-		position: fixed;
-		width: 100vw;
-		height: calc(100vh - 70px);
-		margin: unset;
-	}
+	backdrop-filter: blur(4px);
 `;
 
 export const WaitingForOpponentContainer = styled.div`
 	display: grid;
 	grid-template-rows: auto auto 1fr auto;
 	place-items: center;
-	width: 40%;
-	min-width: 650px;
+	width: 400px;
 	height: 400px;
-	/* position: absolute; */
 
 	margin: auto;
 
 	z-index: 10;
 
 	${StarBorderFilled};
-
-	@media screen and (max-width: 980px) {
-		width: 90vw;
-		min-width: unset;
-		height: calc(80vh - 70px);
-
-		h2 {
-			font-size: 24px;
-			white-space: normal;
-			text-align: center;
-		}
-	}
 `;
 
 export const AutoResignContainer = styled.div`

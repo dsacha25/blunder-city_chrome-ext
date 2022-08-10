@@ -5,27 +5,21 @@ export const ActiveGameErrorContainer = styled.div`
 	display: grid;
 	place-items: center;
 	place-content: center;
-	width: 700px;
-	height: 700px;
+	width: 400px;
+	height: 100%;
 
-	margin: 20px;
 	padding: 20px;
 
 	place-self: center;
 	justify-self: center;
 
-	background-color: ${({ theme }) => theme.warn};
+	background-color: ${({ theme }) => theme.warn}99;
 
-	border-radius: 60px;
-
-	@media screen and (max-width: 980px) {
-		width: 94vw;
-		height: 400px;
-	}
+	border-radius: 0.5rem;
 `;
 
 export const GameErrorMessage = styled.p`
-	font-size: 20px;
+	font-size: 14px;
 	place-self: center;
 	text-align: center;
 	font-weight: 600;
@@ -36,5 +30,5 @@ export const ReturnButton = styled(CustomButton)`
 	width: 200px;
 	height: 60px;
 
-	border-radius: 30px;
+	border-radius: 0.5rem;
 `;

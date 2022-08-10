@@ -34,10 +34,10 @@ const WaitingForOpponentMsg: FC<WaitingForOpponentMsgProps> = ({
 	return !playersPresent ? (
 		<WaitingPromptBackdrop>
 			<WaitingForOpponentContainer>
-				<Title fontSize="30px">Waiting for opponent...</Title>
+				<Title fontSize="16px">Waiting for opponent...</Title>
 				<p>opponent auto resigns in...</p>
 				<AutoResignContainer>
-					<AutoResignSpinner size="120px" />
+					<AutoResignSpinner size="100px" />
 					{/* <CountdownTimer
 						date={Date.now() + milliseconds({ seconds: 600 })}
 						getTime={handleAutoResign}

@@ -19,7 +19,7 @@ const ActiveGameError = () => {
 				Please return to dashboard!
 			</GameErrorMessage>
 			<ReturnButton
-				color="main"
+				color="secondary"
 				onClick={() => {
 					navigate(`/${Paths.DASHBOARD}`);
 				}}
