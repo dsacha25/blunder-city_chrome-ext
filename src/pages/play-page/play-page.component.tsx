@@ -8,8 +8,15 @@ import { selectUserUID } from '../../redux/users/user.selector';
 import { PlayContainer } from './play-page.styles';
 import useSelector from '../../hooks/use-selector/use-selector.hook';
 import WaitingForOpponentMsg from '../../components/games/game-play/waiting-for-opponent-msg/waiting-for-opponent-msg.component';
+import { RootState } from '../../redux/root-reducer';
+import { connect } from 'react-redux';
+import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
 
-const PlayPage = () => {
+const PlayPage = (props: {
+	activeGame: ChessGameType | null;
+	uid?: string;
+}) => {
+	const { activeGame, uid } = props;
 	const {
 		openActiveGameListener,
 		// openEnemyInfoListener,
@@ -18,13 +25,10 @@ const PlayPage = () => {
 		closeActiveGameListener,
 	} = useActions();
 	const gameUID = useQuery('game');
-	const activeGame = useSelector((state) => selectActiveGame(state));
-	const uid = useSelector((state) => selectUserUID(state));
 	const [playersPresent, setPlayersPresent] = useState(false);
 
 	useEffect(() => {
 		if (gameUID) {
-			// fetchGameById(gameUID);
 			// setUserGamePresence(true, gameUID);
 		}
 
@@ -107,4 +111,9 @@ const PlayPage = () => {
 	);
 };
 
-export default PlayPage;
+const mapStateToProps = ({ game, user }: RootState) => ({
+	activeGame: game.activeGame,
+	uid: user.auth?.uid,
+});
+
+export default connect(mapStateToProps)(PlayPage);
