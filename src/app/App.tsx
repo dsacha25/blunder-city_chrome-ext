@@ -18,22 +18,16 @@ function App(props: { user: User | null; playableGames: ChessGameType[] }) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		console.log(
-			'PLAYABLE GAMES: ',
-			parsePlayableGames(playableGames, user?.uid)
-		);
-
 		if (process.env.NODE_ENV === 'development') return;
 
-		if (playableGames.length > 0) {
-			chrome.browserAction.setBadgeText({
-				text: playableGames.length.toString(),
-			});
-			chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
-		} else {
-			chrome.browserAction.setBadgeText({});
-			chrome.browserAction.setBadgeBackgroundColor({ color: 'transparent' });
-		}
+		// if (playableGames.length > 0) {
+		// 	chrome.browserAction.setBadgeText({
+		// 		text: playableGames.length.toString(),
+		// 	});
+		// 	chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
+		// } else {
+		// 	chrome.browserAction.setBadgeText({});
+		// }
 	}, [playableGames]);
 
 	useEffect(() => {
@@ -65,7 +59,7 @@ function App(props: { user: User | null; playableGames: ChessGameType[] }) {
 const mapStateToProps = ({ user, game }: RootState) => {
 	return {
 		user: user.auth,
-		playableGames: game.games,
+		playableGames: parsePlayableGames(game.games, user.auth?.uid),
 	};
 };
 

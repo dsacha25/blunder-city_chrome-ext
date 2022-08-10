@@ -5,6 +5,7 @@ import { functions } from '../../utils/classes/firestore/firestore-app';
 import { listener } from '../../utils/classes/sagas/saga-listener';
 import { getPlayerOrientation } from '../../utils/helpers/game/get-player-orientation/get-player-orientation';
 import parseGameTime from '../../utils/helpers/parsers/parse-game-time/parse-game-time';
+import parsePlayableGames from '../../utils/helpers/parsers/parse-playable-games/parse-playable-games';
 import getReturn from '../../utils/helpers/sagas/get-return-type';
 import { ChessGameType } from '../../utils/types/chess/chess-game-type/chess-game-type';
 import { ConfirmedMove } from '../../utils/types/chess/confirmed-move/confirmed-move';
@@ -100,6 +101,18 @@ export function* onOpenActiveGameListener() {
 export function* setActiveGamesSaga(chessGames: ChessGameType[]) {
 	yield console.log('CHESS GAMES: ', chessGames);
 	yield* put(setActiveGames(chessGames));
+	const uid = yield* select(selectUserUID);
+
+	const playableGames = parsePlayableGames(chessGames, uid);
+
+	if (playableGames.length > 0) {
+		chrome.browserAction.setBadgeText({
+			text: playableGames.length.toString(),
+		});
+		chrome.browserAction.setBadgeBackgroundColor({ color: '#c8354f' });
+	} else if (playableGames.length === 0) {
+		chrome.browserAction.setBadgeText({});
+	}
 }
 
 export function* createActiveGamesListener() {
