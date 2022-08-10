@@ -7,9 +7,10 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Store } from 'webext-redux';
 import { Provider } from 'react-redux';
-import { store } from './redux/redux';
+import { persistor, store } from './redux/redux';
 import { ThemeProvider } from 'styled-components';
 import globalStyles from './global-styles/global-styles';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
@@ -17,11 +18,13 @@ if (process.env.NODE_ENV === 'development') {
 	root.render(
 		<React.StrictMode>
 			<Provider store={store}>
-				<BrowserRouter>
-					<ThemeProvider theme={globalStyles}>
-						<App />
-					</ThemeProvider>
-				</BrowserRouter>
+				<PersistGate persistor={persistor}>
+					<BrowserRouter>
+						<ThemeProvider theme={globalStyles}>
+							<App />
+						</ThemeProvider>
+					</BrowserRouter>
+				</PersistGate>
 			</Provider>
 		</React.StrictMode>
 	);
@@ -32,11 +35,13 @@ if (process.env.NODE_ENV === 'development') {
 		render(
 			<React.StrictMode>
 				<Provider store={proxyStore}>
-					<BrowserRouter>
-						<ThemeProvider theme={globalStyles}>
-							<App />
-						</ThemeProvider>
-					</BrowserRouter>
+					<PersistGate persistor={persistor}>
+						<BrowserRouter>
+							<ThemeProvider theme={globalStyles}>
+								<App />
+							</ThemeProvider>
+						</BrowserRouter>
+					</PersistGate>
 				</Provider>
 			</React.StrictMode>,
 			document.getElementById('root')
